@@ -1,0 +1,53 @@
+# ────────────────────────────────────────────────
+# Prettier ignore — generated / lock / config файлы
+# ────────────────────────────────────────────────
+
+# Lock-файлы пакет-менеджеров (очень важно!)
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+
+# Prisma generated клиент (самая частая боль)
+apps/api/src/generated/prisma/
+apps/*/src/generated/prisma/
+**/src/generated/prisma/
+prisma/generated/
+**/prisma/generated/
+
+# Автогенерируемые типы и декларации
+**/*.d.ts
+next-env.d.ts
+**/*.generated.*
+**/*.generated.ts
+**/*.generated.js
+
+# JSON-данные / конфиги / скрипты, которые не надо трогать
+apps/api/scripts/*.json
+**/products.json
+**/*.min.json
+
+# Docker / devops файлы
+docker-compose*.yml
+docker-compose*.yaml
+**.dockerignore
+Dockerfile*
+
+# GitHub Actions и прочие CI/CD
+.github/workflows/*
+!.github/workflows/*.yml    # если всё же хочешь проверять некоторые — раскомментируй нужные
+
+# Другие часто проблемные места
+**/tsconfig*.json           # tsconfig часто ломается
+**/.eslintrc*.json
+**/turbo.json
+**/changeset/*
+**.json
+
+# Временные / сборочные директории
+dist/
+build/
+out/
+coverage/
+.tmp/
+.cache/
+node_modules/
