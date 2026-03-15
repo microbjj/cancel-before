@@ -9,7 +9,7 @@ on:
 permissions:
   contents: read
   packages: write
-  
+
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -76,6 +76,11 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/${{ github.repository }}/app:latest
+          build-args: |
+            DATABASE_URL=postgresql://user:pass@localhost:5432/dummy?schema=public
+            NEXTAUTH_SECRET=ci-secret-min-32-chars-long-enough
+            NEXTAUTH_URL=http://localhost:3000
+            SKIP_ENV_VALIDATION=1
 
       - name: Deploy to VPS via SSH
         uses: appleboy/ssh-action@v1.2.0
