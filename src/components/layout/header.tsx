@@ -2,11 +2,9 @@ import Link from 'next/link'
 import { Container } from '@/components/shared/container'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Logo } from '@/components/ui/logo'
+import { UserNav } from '@/components/layout/user-nav'
 
-const navItems = [
-    { href: '/', label: 'Главная' },
-    { href: '/dashboard', label: 'Панель' },
-]
+const navItems = [{ href: '/dashboard', label: 'Панель' }]
 
 export function Header() {
     return (
@@ -23,6 +21,7 @@ export function Header() {
                             {item.label}
                         </Link>
                     ))}
+                    <UserNav />
                     <ThemeToggle />
                 </nav>
             </Container>
