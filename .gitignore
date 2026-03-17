@@ -43,3 +43,7 @@ src/generated/
 
 # IDE
 .idea
+
+# agents
+.claude/
+.cursor/
