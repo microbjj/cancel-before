@@ -40,6 +40,9 @@ RUN npm install -g prisma
 # Migration files
 COPY --from=builder /app/prisma ./prisma
 
+# Minimal JS config for prisma migrate deploy (no TS/imports needed)
+RUN printf 'module.exports = { schema: "prisma/schema.prisma", migrations: { path: "prisma/migrations" }, datasource: { url: process.env.DATABASE_URL } }\n' > prisma.config.js
+
 # Entrypoint
 COPY entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
