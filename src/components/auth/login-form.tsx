@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { signIn } from 'next-auth/react'
@@ -20,14 +21,10 @@ export function LoginForm() {
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm<LoginCredentialsInput, undefined, LoginCredentials>({
-        resolver: zodResolver(loginCredentialsSchema as never) as Resolver<
-            LoginCredentialsInput,
-            undefined,
-            LoginCredentials
-        >,
+        resolver: zodResolver(loginCredentialsSchema as never) as Resolver<LoginCredentialsInput, undefined, LoginCredentials>,
         defaultValues: {
             email: '',
-            name: '',
+            password: '',
         },
     })
 
@@ -36,13 +33,13 @@ export function LoginForm() {
 
         const result = await signIn('credentials', {
             email: values.email,
-            name: values.name ?? undefined,
+            password: values.password,
             callbackUrl,
             redirect: false,
         })
 
         if (!result || result.error) {
-            setError('Не удалось войти. Проверьте email и попробуйте снова.')
+            setError('Неверный email или пароль.')
             return
         }
 
@@ -67,17 +64,17 @@ export function LoginForm() {
             </div>
 
             <div className="space-y-2">
-                <label htmlFor="name" className="text-sm font-medium">
-                    Имя (опционально)
+                <label htmlFor="password" className="text-sm font-medium">
+                    Пароль
                 </label>
                 <input
-                    id="name"
-                    type="text"
+                    id="password"
+                    type="password"
                     className="w-full rounded-md border bg-background px-3 py-2 text-sm"
-                    placeholder="Иван"
-                    {...register('name')}
+                    placeholder="••••••••"
+                    {...register('password')}
                 />
-                {errors.name ? <p className="text-sm text-destructive">{errors.name.message}</p> : null}
+                {errors.password ? <p className="text-sm text-destructive">{errors.password.message}</p> : null}
             </div>
 
             {error ? <p className="text-sm text-destructive">{error}</p> : null}
@@ -85,6 +82,13 @@ export function LoginForm() {
             <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? 'Входим...' : 'Войти'}
             </Button>
+
+            <p className="text-center text-sm text-muted-foreground">
+                Нет аккаунта?{' '}
+                <Link href="/register" className="underline underline-offset-4 hover:text-foreground">
+                    Зарегистрироваться
+                </Link>
+            </p>
         </form>
     )
 }

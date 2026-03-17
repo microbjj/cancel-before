@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs'
 import type { NextAuthOptions } from 'next-auth'
 import { getServerSession } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
@@ -16,27 +17,28 @@ export const authOptions: NextAuthOptions = {
             name: 'Email',
             credentials: {
                 email: { label: 'Email', type: 'email' },
-                name: { label: 'Name', type: 'text' },
+                password: { label: 'Password', type: 'password' },
             },
             async authorize(credentials) {
                 const parsed = loginCredentialsSchema.safeParse({
                     email: credentials?.email,
-                    name: credentials?.name,
+                    password: credentials?.password,
                 })
                 if (!parsed.success) {
                     return null
                 }
 
-                const { email, name } = parsed.data
+                const { email, password } = parsed.data
 
-                const user = await db.user.upsert({
-                    where: { email },
-                    update: name ? { name } : {},
-                    create: {
-                        email,
-                        name,
-                    },
-                })
+                const user = await db.user.findUnique({ where: { email } })
+                if (!user || !user.passwordHash) {
+                    return null
+                }
+
+                const valid = await bcrypt.compare(password, user.passwordHash)
+                if (!valid) {
+                    return null
+                }
 
                 return {
                     id: user.id,

@@ -4,11 +4,7 @@ export const loginEmailSchema = z.email('Введите корректный ema
 
 export const loginCredentialsSchema = z.object({
     email: loginEmailSchema,
-    name: z
-        .string()
-        .trim()
-        .optional()
-        .transform((value) => (value ? value : null)),
+    password: z.string().min(1, 'Введите пароль.'),
 })
 
 export type LoginCredentialsInput = z.input<typeof loginCredentialsSchema>
