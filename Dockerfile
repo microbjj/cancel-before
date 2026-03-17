@@ -34,11 +34,8 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
-# Prisma CLI + engines (needed for migrate deploy at startup)
-COPY --from=deps /app/node_modules/prisma ./node_modules/prisma
-COPY --from=deps /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=deps /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
-COPY --from=deps /app/node_modules/dotenv ./node_modules/dotenv
+# Prisma CLI + engines via npm (avoids pnpm symlink issues in runner)
+RUN npm install prisma --no-save --ignore-scripts
 
 # Migration files and config
 COPY --from=builder /app/prisma ./prisma
