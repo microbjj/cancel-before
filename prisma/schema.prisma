@@ -40,11 +40,19 @@ enum WebhookProvider {
   STRIPE
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id               String            @id @default(cuid())
   email            String            @unique
   name             String?
   passwordHash     String?
+  role             Role              @default(USER)
+  lastSeenIp       String?
+  lastSeenDevice   String?
   timezone         String            @default("UTC")
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt

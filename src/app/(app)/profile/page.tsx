@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 
+import { ProfileEditForm } from '@/components/profile/edit-form'
 import { ProfileSignOutButton } from '@/components/profile/sign-out-button'
 import { getAuthSession } from '@/lib/auth'
 import { db } from '@/lib/db'
@@ -23,7 +24,7 @@ export default async function ProfilePage() {
     const planLabel = user.userPlan?.tier ?? 'FREE'
 
     return (
-        <div className="mx-auto w-full max-w-sm px-6 py-10">
+        <div className="mx-auto w-full max-w-sm px-4 py-10 sm:px-6">
             <div className="border-border space-y-6 border p-6">
                 <div>
                     <p className="text-grays mb-1 text-xs">Email</p>
@@ -35,7 +36,14 @@ export default async function ProfilePage() {
                     <p className="text-light text-sm font-medium">{planLabel}</p>
                 </div>
 
-                <ProfileSignOutButton />
+                <div className="border-border border-t pt-6">
+                    <p className="text-light mb-4 text-sm font-medium">Редактировать профиль</p>
+                    <ProfileEditForm initialName={user.name} />
+                </div>
+
+                <div className="border-border border-t pt-2">
+                    <ProfileSignOutButton />
+                </div>
             </div>
         </div>
     )

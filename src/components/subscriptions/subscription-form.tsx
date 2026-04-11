@@ -191,7 +191,10 @@ export function SubscriptionForm({
                             </option>
                         ))}
                     </select>
-                    <select className={`${selectBase} min-w-[104px] flex-1 px-2 py-1.5`} {...register('status')}>
+                    <select
+                        className={`${selectBase} min-w-[104px] flex-1 px-2 py-1.5`}
+                        {...register('status')}
+                    >
                         {statusOptions.map((o) => (
                             <option key={o.value} value={o.value}>
                                 {o.label}

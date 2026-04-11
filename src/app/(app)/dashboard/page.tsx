@@ -61,9 +61,12 @@ export default async function DashboardPage() {
         })),
     }))
 
+    const name = session.user.name ?? null
+
     return (
         <Container className="py-6 sm:py-8">
             <section className="space-y-6">
+                {name && <p className="text-light text-sm">Привет, {name}</p>}
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <div className="border-border border p-4">
                         <p className="text-grays text-xs">Всего подписок</p>
