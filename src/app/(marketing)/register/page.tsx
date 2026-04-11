@@ -13,11 +13,8 @@ export default async function RegisterPage() {
 
     return (
         <Container className="py-12">
-            <section className="mx-auto max-w-md space-y-4">
-                <h1 className="text-3xl font-bold tracking-tight">Регистрация</h1>
-                <p className="text-muted-foreground text-sm">
-                    Создайте аккаунт, чтобы начать отслеживать подписки.
-                </p>
+            <section className="mx-auto max-w-sm space-y-4">
+                <p className="text-light text-base font-semibold">Регистрация</p>
                 <RegisterForm />
             </section>
         </Container>

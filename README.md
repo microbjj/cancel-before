@@ -41,12 +41,12 @@ CancelBefore — заготовка приложения для отслежив
 - `GET/POST /api/subscriptions/[id]/reminder-rules`
 - `PATCH/DELETE /api/reminder-rules/[id]`
 - `POST /api/webhooks/stripe`
-  - ждёт заголовок `stripe-signature`
-  - ждёт JSON c полями `id` и `type`
-  - сохраняет событие в `WebhookEvent`
+    - ждёт заголовок `stripe-signature`
+    - ждёт JSON c полями `id` и `type`
+    - сохраняет событие в `WebhookEvent`
 - `POST /api/cron/reminders`
-  - ждёт заголовок `x-cron-secret`, который должен совпадать с `CRON_SECRET`
-  - опциональный JSON body: `{ "dryRun": boolean, "limit": number }`
+    - ждёт заголовок `x-cron-secret`, который должен совпадать с `CRON_SECRET`
+    - опциональный JSON body: `{ "dryRun": boolean, "limit": number }`
 
 ## Переменные окружения
 

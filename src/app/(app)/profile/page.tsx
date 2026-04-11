@@ -23,38 +23,20 @@ export default async function ProfilePage() {
     const planLabel = user.userPlan?.tier ?? 'FREE'
 
     return (
-        <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-10">
-            <div>
-                <h1 className="text-3xl font-semibold tracking-tight">Профиль</h1>
-                <p className="mt-2 text-sm text-muted-foreground">
-                    Здесь вы можете увидеть данные своего аккаунта и текущий тариф.
-                </p>
-            </div>
-
-            <div className="space-y-4 rounded-lg border bg-card p-6 shadow-sm">
-                <div className="space-y-1">
-                    <p className="text-xs font-medium uppercase text-muted-foreground">
-                        Email
-                    </p>
-                    <p className="text-sm">
-                        {session.user.email ?? user.email}
-                    </p>
+        <div className="mx-auto w-full max-w-sm px-6 py-10">
+            <div className="border-border space-y-6 border p-6">
+                <div>
+                    <p className="text-grays mb-1 text-xs">Email</p>
+                    <p className="text-light text-sm">{session.user.email ?? user.email}</p>
                 </div>
 
-                <div className="space-y-1">
-                    <p className="text-xs font-medium uppercase text-muted-foreground">
-                        Текущий тариф
-                    </p>
-                    <p className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-medium uppercase tracking-wide text-secondary-foreground">
-                        {planLabel}
-                    </p>
+                <div>
+                    <p className="text-grays mb-1 text-xs">Тариф</p>
+                    <p className="text-light text-sm font-medium">{planLabel}</p>
                 </div>
 
-                <div className="pt-2">
-                    <ProfileSignOutButton />
-                </div>
+                <ProfileSignOutButton />
             </div>
         </div>
     )
 }
-

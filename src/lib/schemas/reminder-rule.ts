@@ -20,21 +20,24 @@ const baseReminderRuleSchema = z
 
             return value
         }),
-        isActive: z.unknown().optional().transform((value, ctx) => {
-            if (value === undefined) {
-                return undefined
-            }
+        isActive: z
+            .unknown()
+            .optional()
+            .transform((value, ctx) => {
+                if (value === undefined) {
+                    return undefined
+                }
 
-            if (typeof value !== 'boolean') {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: 'Поле isActive должно быть true или false.',
-                })
-                return z.NEVER
-            }
+                if (typeof value !== 'boolean') {
+                    ctx.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: 'Поле isActive должно быть true или false.',
+                    })
+                    return z.NEVER
+                }
 
-            return value
-        }),
+                return value
+            }),
     })
     .strip()
 

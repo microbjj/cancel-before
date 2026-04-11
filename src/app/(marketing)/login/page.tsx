@@ -13,11 +13,8 @@ export default async function LoginPage() {
 
     return (
         <Container className="py-12">
-            <section className="mx-auto max-w-md space-y-4">
-                <h1 className="text-3xl font-bold tracking-tight">Вход в аккаунт</h1>
-                <p className="text-muted-foreground text-sm">
-                    Введите email и пароль для входа в аккаунт.
-                </p>
+            <section className="mx-auto max-w-sm space-y-4">
+                <p className="text-light text-base font-semibold">Вход в аккаунт</p>
                 <LoginForm />
             </section>
         </Container>
