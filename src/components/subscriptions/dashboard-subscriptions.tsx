@@ -107,7 +107,7 @@ function SubscriptionRow({ subscription }: SubscriptionRowProps) {
             </div>
             {isEditing && (
                 <div className="border-border space-y-4 border-t p-4">
-                    <div className="flex flex-wrap items-start gap-6">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-start sm:gap-6">
                         <div className="min-w-0 flex-1">
                             <SubscriptionForm
                                 mode="edit"
@@ -117,7 +117,7 @@ function SubscriptionRow({ subscription }: SubscriptionRowProps) {
                                 onSuccess={() => setIsEditing(false)}
                             />
                         </div>
-                        <div className="border-border max-w-xs min-w-[200px] flex-1 border-l pl-4">
+                        <div className="border-border w-full border-t pt-4 sm:w-auto sm:max-w-xs sm:min-w-[200px] sm:flex-1 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-4">
                             <p className="text-grays mb-2 text-xs">Напоминания</p>
                             <ReminderRulesInline
                                 embedded
@@ -125,7 +125,7 @@ function SubscriptionRow({ subscription }: SubscriptionRowProps) {
                                 initialRules={subscription.reminderRules}
                             />
                         </div>
-                        <div className="flex shrink-0 flex-col gap-2">
+                        <div className="flex shrink-0 flex-row gap-2 sm:flex-col">
                             <Button
                                 type="button"
                                 size="sm"
@@ -203,7 +203,7 @@ export function DashboardSubscriptions({ subscriptions }: DashboardSubscriptions
 
     return (
         <section className="space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex min-w-0 items-center justify-between">
                 <p className="text-light text-sm font-medium">Мои подписки</p>
                 <Button size="sm" onClick={() => setShowAddForm((v) => !v)}>
                     {showAddForm ? 'Отмена' : 'Добавить'}

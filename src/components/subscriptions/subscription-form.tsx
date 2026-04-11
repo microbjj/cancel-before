@@ -180,9 +180,9 @@ export function SubscriptionForm({
                         {...register('currency')}
                     />
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                     <select
-                        className={`${selectBase} w-24 px-2 py-1.5`}
+                        className={`${selectBase} min-w-[88px] flex-1 px-2 py-1.5`}
                         {...register('billingCycle')}
                     >
                         {billingCycleOptions.map((o) => (
@@ -191,7 +191,7 @@ export function SubscriptionForm({
                             </option>
                         ))}
                     </select>
-                    <select className={`${selectBase} w-28 px-2 py-1.5`} {...register('status')}>
+                    <select className={`${selectBase} min-w-[104px] flex-1 px-2 py-1.5`} {...register('status')}>
                         {statusOptions.map((o) => (
                             <option key={o.value} value={o.value}>
                                 {o.label}
@@ -200,7 +200,7 @@ export function SubscriptionForm({
                     </select>
                     <input
                         type="date"
-                        className={`${inputBase} w-44 px-3 py-1.5 [color-scheme:dark]`}
+                        className={`${inputBase} min-w-[140px] flex-1 px-3 py-1.5 [color-scheme:dark]`}
                         {...register('cancelByAt')}
                     />
                     {trailingRow2}
@@ -249,7 +249,7 @@ export function SubscriptionForm({
                     <span className="text-grays text-xs whitespace-nowrap">до</span>
                     <input
                         type="date"
-                        className={`${inputBase} ${size} w-44 [color-scheme:dark]`}
+                        className={`${inputBase} ${size} min-w-[140px] flex-1 [color-scheme:dark]`}
                         {...register('cancelByAt')}
                     />
                 </div>

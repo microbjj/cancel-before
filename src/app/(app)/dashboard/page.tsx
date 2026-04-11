@@ -62,7 +62,7 @@ export default async function DashboardPage() {
     }))
 
     return (
-        <Container className="py-8">
+        <Container className="py-6 sm:py-8">
             <section className="space-y-6">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <div className="border-border border p-4">
