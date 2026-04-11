@@ -55,5 +55,6 @@
     }
     body {
         @apply bg-dark text-light font-sans;
+        overflow-x: hidden;
     }
 }
