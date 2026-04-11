@@ -150,7 +150,9 @@ export async function POST(request: Request) {
         })
 
         const alreadySentSet = new Set(
-            existingLogs.map((log) => log.reminderRuleId).filter((value): value is string => Boolean(value)),
+            existingLogs
+                .map((log) => log.reminderRuleId)
+                .filter((value): value is string => Boolean(value)),
         )
 
         let sent = 0

@@ -109,7 +109,9 @@ export function ReminderRulesManager({ subscriptionId, initialRules }: ReminderR
         }
 
         setRules((prev) =>
-            prev.map((item) => (item.id === body.data!.id ? { ...item, isActive: body.data!.isActive } : item)),
+            prev.map((item) =>
+                item.id === body.data!.id ? { ...item, isActive: body.data!.isActive } : item,
+            ),
         )
         setSuccessMessage('Правило обновлено.')
     }
@@ -128,10 +130,12 @@ export function ReminderRulesManager({ subscriptionId, initialRules }: ReminderR
                         type="number"
                         min={0}
                         max={90}
-                        className="w-40 rounded-md border bg-background px-3 py-2 text-sm"
+                        className="bg-background w-40 rounded-md border px-3 py-2 text-sm"
                         {...register('daysBefore', { valueAsNumber: true })}
                     />
-                    {errors.daysBefore ? <p className="text-sm text-destructive">{errors.daysBefore.message}</p> : null}
+                    {errors.daysBefore ? (
+                        <p className="text-destructive text-sm">{errors.daysBefore.message}</p>
+                    ) : null}
                 </div>
                 <Button type="submit" disabled={isSubmitting}>
                     {isSubmitting ? 'Добавляем...' : 'Добавить правило'}
@@ -139,11 +143,16 @@ export function ReminderRulesManager({ subscriptionId, initialRules }: ReminderR
             </form>
 
             {rules.length === 0 ? (
-                <p className="text-muted-foreground text-sm">Пока нет правил. Добавьте первое напоминание.</p>
+                <p className="text-muted-foreground text-sm">
+                    Пока нет правил. Добавьте первое напоминание.
+                </p>
             ) : (
                 <ul className="space-y-2">
                     {rules.map((rule) => (
-                        <li key={rule.id} className="flex items-center justify-between gap-4 rounded-md border p-3">
+                        <li
+                            key={rule.id}
+                            className="flex items-center justify-between gap-4 rounded-md border p-3"
+                        >
                             <div className="text-sm">
                                 <p className="font-medium">{rule.daysBefore} дн. до дедлайна</p>
                                 <p className="text-muted-foreground">
@@ -151,10 +160,18 @@ export function ReminderRulesManager({ subscriptionId, initialRules }: ReminderR
                                 </p>
                             </div>
                             <div className="flex items-center gap-2">
-                                <Button type="button" variant="outline" onClick={() => toggleRule(rule)}>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => toggleRule(rule)}
+                                >
                                     {rule.isActive ? 'Выключить' : 'Включить'}
                                 </Button>
-                                <Button type="button" variant="destructive" onClick={() => removeRule(rule.id)}>
+                                <Button
+                                    type="button"
+                                    variant="destructive"
+                                    onClick={() => removeRule(rule.id)}
+                                >
                                     Удалить
                                 </Button>
                             </div>
@@ -163,7 +180,7 @@ export function ReminderRulesManager({ subscriptionId, initialRules }: ReminderR
                 </ul>
             )}
 
-            {error ? <p className="text-sm text-destructive">{error}</p> : null}
+            {error ? <p className="text-destructive text-sm">{error}</p> : null}
             {successMessage ? <p className="text-sm text-emerald-600">{successMessage}</p> : null}
         </section>
     )

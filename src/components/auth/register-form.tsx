@@ -10,6 +10,10 @@ import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { registerSchema, type RegisterInput } from '@/lib/schemas'
 
+const inputClass =
+    'w-full rounded border border-border bg-transparent px-3 py-1.5 text-sm text-light placeholder:text-grays focus:border-primary focus:outline-none'
+const labelClass = 'mb-1 block text-sm font-medium text-grays'
+
 export function RegisterForm() {
     const router = useRouter()
     const [error, setError] = useState<string | null>(null)
@@ -68,74 +72,83 @@ export function RegisterForm() {
     })
 
     return (
-        <form onSubmit={onSubmit} className="space-y-4 rounded-lg border p-6">
-            <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium">
+        <form onSubmit={onSubmit} className="border-border space-y-4 border p-6">
+            <div>
+                <label htmlFor="email" className={labelClass}>
                     Email
                 </label>
                 <input
                     id="email"
                     type="email"
-                    className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+                    className={inputClass}
                     placeholder="name@example.com"
                     {...register('email')}
                 />
-                {errors.email ? <p className="text-sm text-destructive">{errors.email.message}</p> : null}
+                {errors.email ? (
+                    <p className="mt-1 text-xs text-red-400">{errors.email.message}</p>
+                ) : null}
             </div>
 
-            <div className="space-y-2">
-                <label htmlFor="name" className="text-sm font-medium">
+            <div>
+                <label htmlFor="name" className={labelClass}>
                     Имя
                 </label>
                 <input
                     id="name"
                     type="text"
-                    className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+                    className={inputClass}
                     placeholder="Иван"
                     {...register('name')}
                 />
-                {errors.name ? <p className="text-sm text-destructive">{errors.name.message}</p> : null}
+                {errors.name ? (
+                    <p className="mt-1 text-xs text-red-400">{errors.name.message}</p>
+                ) : null}
             </div>
 
-            <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium">
+            <div>
+                <label htmlFor="password" className={labelClass}>
                     Пароль
                 </label>
                 <input
                     id="password"
                     type="password"
-                    className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+                    className={inputClass}
                     placeholder="••••••••"
                     {...register('password')}
                 />
-                {errors.password ? <p className="text-sm text-destructive">{errors.password.message}</p> : null}
+                {errors.password ? (
+                    <p className="mt-1 text-xs text-red-400">{errors.password.message}</p>
+                ) : null}
             </div>
 
-            <div className="space-y-2">
-                <label htmlFor="confirmPassword" className="text-sm font-medium">
+            <div>
+                <label htmlFor="confirmPassword" className={labelClass}>
                     Повторите пароль
                 </label>
                 <input
                     id="confirmPassword"
                     type="password"
-                    className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+                    className={inputClass}
                     placeholder="••••••••"
                     {...register('confirmPassword')}
                 />
                 {errors.confirmPassword ? (
-                    <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
+                    <p className="mt-1 text-xs text-red-400">{errors.confirmPassword.message}</p>
                 ) : null}
             </div>
 
-            {error ? <p className="text-sm text-destructive">{error}</p> : null}
+            {error ? <p className="text-xs text-red-400">{error}</p> : null}
 
             <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? 'Регистрируем...' : 'Зарегистрироваться'}
             </Button>
 
-            <p className="text-center text-sm text-muted-foreground">
+            <p className="text-grays text-center text-xs">
                 Уже есть аккаунт?{' '}
-                <Link href="/login" className="underline underline-offset-4 hover:text-foreground">
+                <Link
+                    href="/login"
+                    className="text-light hover:text-primary transition-colors duration-100"
+                >
                     Войти
                 </Link>
             </p>

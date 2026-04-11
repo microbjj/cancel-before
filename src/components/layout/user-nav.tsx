@@ -1,35 +1,32 @@
-"use client"
+'use client'
 
-import Link from "next/link"
-import { useSession } from "next-auth/react"
+import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 
 export function UserNav() {
-  const { status } = useSession()
+    const { status } = useSession()
 
-  if (status === "loading") {
-    return null
-  }
+    if (status === 'loading') {
+        return null
+    }
 
-  if (status === "unauthenticated") {
+    if (status === 'unauthenticated') {
+        return (
+            <Link
+                href="/login"
+                className="text-grays hover:text-primary text-sm transition-colors duration-100"
+            >
+                Войти
+            </Link>
+        )
+    }
+
     return (
-      <Link
-        href="/login"
-        className="hover:text-foreground transition-colors"
-      >
-        Войти
-      </Link>
+        <Link
+            href="/profile"
+            className="text-grays hover:text-primary text-sm transition-colors duration-100"
+        >
+            Профиль
+        </Link>
     )
-  }
-
-  return (
-    <div className="flex items-center">
-      <Link
-        href="/profile"
-        className="hover:text-foreground transition-colors"
-      >
-        Профиль
-      </Link>
-    </div>
-  )
 }
-

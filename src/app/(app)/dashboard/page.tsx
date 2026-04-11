@@ -1,5 +1,8 @@
 import { Container } from '@/components/shared/container'
-import { DashboardSubscriptions, type SubscriptionListItem } from '@/components/subscriptions/dashboard-subscriptions'
+import {
+    DashboardSubscriptions,
+    type SubscriptionListItem,
+} from '@/components/subscriptions/dashboard-subscriptions'
 import { db } from '@/lib/db'
 import { getAuthSession } from '@/lib/auth'
 
@@ -37,7 +40,10 @@ export default async function DashboardPage() {
     })
 
     const subscriptionsWithDeadline = subscriptions.filter((item) => item.cancelByAt)
-    const nearest = subscriptionsWithDeadline.find((item) => item.cancelByAt && item.cancelByAt >= new Date()) ?? null
+    const nearest =
+        subscriptionsWithDeadline.find(
+            (item) => item.cancelByAt && item.cancelByAt >= new Date(),
+        ) ?? null
 
     const listItems: SubscriptionListItem[] = subscriptions.map((s) => ({
         id: s.id,
@@ -48,32 +54,33 @@ export default async function DashboardPage() {
         currency: s.currency,
         cancelByAt: toIsoOrNull(s.cancelByAt),
         reminderRulesCount: s.reminderRules.filter((r) => r.isActive).length,
-        reminderRules: s.reminderRules.map((r) => ({ id: r.id, daysBefore: r.daysBefore, isActive: r.isActive })),
+        reminderRules: s.reminderRules.map((r) => ({
+            id: r.id,
+            daysBefore: r.daysBefore,
+            isActive: r.isActive,
+        })),
     }))
 
     return (
-        <Container className="max-w-[90rem] py-10">
-            <section className="space-y-8">
-                <div className="space-y-2">
-                    <h1 className="text-3xl font-bold tracking-tight">Панель управления</h1>
-                    <p className="text-muted-foreground">
-                        Подписки, дедлайны отмены и быстрые действия — всё на одной странице.
-                    </p>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-3">
-                    <div className="rounded-md border p-4">
-                        <p className="text-muted-foreground text-sm">Всего подписок</p>
-                        <p className="text-2xl font-semibold">{subscriptions.length}</p>
+        <Container className="py-8">
+            <section className="space-y-6">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <div className="border-border border p-4">
+                        <p className="text-grays text-xs">Всего подписок</p>
+                        <p className="text-light mt-2 text-sm font-medium">
+                            {subscriptions.length}
+                        </p>
                     </div>
-                    <div className="rounded-md border p-4">
-                        <p className="text-muted-foreground text-sm">С датой отмены</p>
-                        <p className="text-2xl font-semibold">{subscriptionsWithDeadline.length}</p>
+                    <div className="border-border border p-4">
+                        <p className="text-grays text-xs">С датой отмены</p>
+                        <p className="text-light mt-2 text-sm font-medium">
+                            {subscriptionsWithDeadline.length}
+                        </p>
                     </div>
-                    <div className="rounded-md border p-4">
-                        <p className="text-muted-foreground text-sm">Ближайшая отмена</p>
-                        <p className="text-base font-semibold">
-                            {nearest ? `${nearest.name} — ${formatDate(nearest.cancelByAt)}` : 'Пока нет данных'}
+                    <div className="border-border border p-4">
+                        <p className="text-grays text-xs">Ближайшая отмена</p>
+                        <p className="text-light mt-2 truncate text-sm font-medium">
+                            {nearest ? `${nearest.name} — ${formatDate(nearest.cancelByAt)}` : '—'}
                         </p>
                     </div>
                 </div>

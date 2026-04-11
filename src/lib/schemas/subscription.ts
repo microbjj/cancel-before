@@ -6,51 +6,54 @@ const billingCycleValues = Object.values(BillingCycle)
 const subscriptionStatusValues = Object.values(SubscriptionStatus)
 
 function optionalDateSchema() {
-    return z.unknown().optional().transform((value, ctx) => {
-        if (value === undefined) {
-            return undefined
-        }
+    return z
+        .unknown()
+        .optional()
+        .transform((value, ctx) => {
+            if (value === undefined) {
+                return undefined
+            }
 
-        if (value === null) {
-            return null
-        }
+            if (value === null) {
+                return null
+            }
 
-        // Пустая строка из полей date input = «нет значения»
-        if (typeof value === 'string' && value.trim() === '') {
-            return null
-        }
+            // Пустая строка из полей date input = «нет значения»
+            if (typeof value === 'string' && value.trim() === '') {
+                return null
+            }
 
-        // Уже Date (например, после мержа при PATCH)
-        if (value instanceof Date) {
-            if (Number.isNaN(value.getTime())) {
+            // Уже Date (например, после мержа при PATCH)
+            if (value instanceof Date) {
+                if (Number.isNaN(value.getTime())) {
+                    ctx.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: 'Некорректная дата.',
+                    })
+                    return z.NEVER
+                }
+                return value
+            }
+
+            if (typeof value !== 'string') {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: 'Дата должна быть в формате ISO или пусто.',
+                })
+                return z.NEVER
+            }
+
+            const parsed = new Date(value)
+            if (Number.isNaN(parsed.getTime())) {
                 ctx.addIssue({
                     code: z.ZodIssueCode.custom,
                     message: 'Некорректная дата.',
                 })
                 return z.NEVER
             }
-            return value
-        }
 
-        if (typeof value !== 'string') {
-            ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: 'Дата должна быть в формате ISO или пусто.',
-            })
-            return z.NEVER
-        }
-
-        const parsed = new Date(value)
-        if (Number.isNaN(parsed.getTime())) {
-            ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: 'Некорректная дата.',
-            })
-            return z.NEVER
-        }
-
-        return parsed
-    })
+            return parsed
+        })
 }
 
 const baseSubscriptionSchema = z

@@ -34,10 +34,8 @@ type SubscriptionFormProps = {
     compact?: boolean
     embedded?: boolean
     trailingRow2?: ReactNode
-    /** Компактный Card-стиль: 2 строки, без лишних подписей */
     cardStyle?: boolean
     formId?: string
-    /** Вызов после успешного сохранения (режим edit) — например, свернуть блок */
     onSuccess?: () => void
 }
 
@@ -61,7 +59,11 @@ const defaultValues: SubscriptionFormValues = {
 }
 
 const inputBase =
-    'rounded-md border border-input bg-background text-sm transition-colors focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring/50'
+    'rounded border border-border bg-transparent text-sm text-light placeholder:text-grays focus:border-primary focus:outline-none'
+
+// px/py намеренно не включены — задаются в месте использования
+const selectBase =
+    'rounded border border-border bg-transparent text-sm text-light focus:border-primary focus:outline-none [color-scheme:dark]'
 
 export function SubscriptionForm({
     mode,
@@ -103,7 +105,8 @@ export function SubscriptionForm({
 
     const [error, setError] = useState<string | null>(null)
 
-    const submitLabel = mode === 'create' ? (isSubmitting ? '…' : 'Создать') : isSubmitting ? '…' : 'Сохранить'
+    const submitLabel =
+        mode === 'create' ? (isSubmitting ? '…' : 'Создать') : isSubmitting ? '…' : 'Сохранить'
 
     const toDateOrNull = (v: Date | string | null | undefined): string | null => {
         if (v == null || v === '') return null
@@ -115,18 +118,24 @@ export function SubscriptionForm({
         async (formValues) => {
             setError(null)
             try {
-                const endpoint = mode === 'create' ? '/api/subscriptions' : `/api/subscriptions/${values.id}`
+                const endpoint =
+                    mode === 'create' ? '/api/subscriptions' : `/api/subscriptions/${values.id}`
                 const method = mode === 'create' ? 'POST' : 'PATCH'
                 const payload = {
                     ...formValues,
-                    cancelByAt: toDateOrNull(formValues.cancelByAt as Date | string | null | undefined),
+                    cancelByAt: toDateOrNull(
+                        formValues.cancelByAt as Date | string | null | undefined,
+                    ),
                 }
                 const response = await fetch(endpoint, {
                     method,
                     headers: { 'content-type': 'application/json' },
                     body: JSON.stringify(payload),
                 })
-                const res = (await response.json().catch(() => null)) as { error?: string; data?: { id: string } } | null
+                const res = (await response.json().catch(() => null)) as {
+                    error?: string
+                    data?: { id: string }
+                } | null
                 if (!response.ok) {
                     setError(res?.error ?? 'Не удалось сохранить.')
                     return
@@ -144,73 +153,73 @@ export function SubscriptionForm({
             }
         },
         (err) => {
-            setError(Object.values(err).find((e) => e?.message)?.message ?? 'Исправьте ошибки в полях формы.')
-        }
+            setError(
+                Object.values(err).find((e) => e?.message)?.message ??
+                    'Исправьте ошибки в полях формы.',
+            )
+        },
     )
-
-    const selectClass =
-        'flex h-8 w-full rounded-md border border-input bg-background px-2 py-1.5 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
 
     if (cardStyle) {
         return (
             <form id={formId} onSubmit={onSubmit} className="space-y-2">
                 <div className="flex flex-wrap items-center gap-2">
-                    <Input
-                        className="h-8 flex-1 text-sm"
-                        placeholder="Название"
-                        {...register('name')}
-                    />
+                    <Input className="flex-1" placeholder="Название" {...register('name')} />
                     <Input
                         type="number"
                         min={0}
                         step={0.01}
-                        className="h-8 w-20 text-sm"
+                        className="w-20"
                         placeholder="0"
                         {...register('amount')}
                     />
                     <Input
-                        className="h-8 w-14 text-sm uppercase"
+                        className="w-14 uppercase"
                         placeholder="RUB"
                         maxLength={3}
                         {...register('currency')}
                     />
-                    
                 </div>
                 <div className="flex items-center gap-2">
-                    <select className={`${selectClass} min-w-[6rem] w-28`} {...register('billingCycle')}>
+                    <select
+                        className={`${selectBase} w-24 px-2 py-1.5`}
+                        {...register('billingCycle')}
+                    >
                         {billingCycleOptions.map((o) => (
                             <option key={o.value} value={o.value}>
                                 {o.label}
                             </option>
                         ))}
                     </select>
-                    <select className={`${selectClass} min-w-[6rem] w-28`} {...register('status')}>
+                    <select className={`${selectBase} w-28 px-2 py-1.5`} {...register('status')}>
                         {statusOptions.map((o) => (
                             <option key={o.value} value={o.value}>
                                 {o.label}
                             </option>
                         ))}
                     </select>
-                    <Input
+                    <input
                         type="date"
-                        className="h-8 w-36 text-sm"
+                        className={`${inputBase} w-44 px-3 py-1.5 [color-scheme:dark]`}
                         {...register('cancelByAt')}
                     />
                     {trailingRow2}
                 </div>
                 {(errors.name ?? errors.amount ?? errors.currency ?? errors.cancelByAt) && (
-                    <p className="text-xs text-destructive">
-                        {errors.name?.message ?? errors.amount?.message ?? errors.currency?.message ?? errors.cancelByAt?.message}
+                    <p className="text-xs text-red-400">
+                        {errors.name?.message ??
+                            errors.amount?.message ??
+                            errors.currency?.message ??
+                            errors.cancelByAt?.message}
                     </p>
                 )}
-                {error && <p className="text-xs text-destructive">{error}</p>}
+                {error && <p className="text-xs text-red-400">{error}</p>}
             </form>
         )
     }
 
-    const pad = compact ? 'p-3' : 'p-4'
-    const size = compact ? 'text-xs py-1.5 px-2' : 'text-sm py-2 px-3'
-    const formClass = embedded ? 'contents' : `rounded-lg border bg-card ${pad}`
+    const size = compact ? 'text-xs py-1 px-2' : 'text-sm py-1.5 px-3'
+    const formClass = embedded ? 'contents' : `border border-border ${compact ? 'p-3' : 'p-4'}`
 
     return (
         <form onSubmit={onSubmit} className={formClass}>
@@ -220,57 +229,60 @@ export function SubscriptionForm({
                     placeholder="Название"
                     {...register('name')}
                 />
-                <div className="flex items-center gap-1 rounded-md border border-input bg-background pr-2">
+                <div className="border-border flex items-center border">
                     <input
                         type="number"
                         min={0}
                         step={0.01}
-                        className={`${inputBase} border-0 bg-transparent focus:ring-0 w-18 ${size}`}
+                        className={`${inputBase} w-24 border-0 ${size}`}
                         placeholder="0"
                         {...register('amount')}
                     />
                     <input
-                        className={`${inputBase} border-0 bg-transparent focus:ring-0 w-10 text-center uppercase ${size}`}
+                        className={`${inputBase} border-border w-14 border-0 border-l px-2 py-1.5 text-center uppercase`}
                         placeholder="RUB"
                         maxLength={3}
                         {...register('currency')}
                     />
                 </div>
                 <div className="flex items-center gap-1.5">
-                    <span className="text-muted-foreground text-xs whitespace-nowrap">до</span>
+                    <span className="text-grays text-xs whitespace-nowrap">до</span>
                     <input
                         type="date"
-                        className={`${inputBase} ${size} w-28`}
+                        className={`${inputBase} ${size} w-44 [color-scheme:dark]`}
                         {...register('cancelByAt')}
                     />
                 </div>
             </div>
             <div className={`flex flex-wrap items-center gap-2 ${embedded ? '' : 'mt-2'}`}>
-                <select className={`${inputBase} ${size} w-20`} {...register('billingCycle')}>
+                <select className={`${selectBase} w-24 px-2 py-1.5`} {...register('billingCycle')}>
                     {billingCycleOptions.map((o) => (
                         <option key={o.value} value={o.value}>
                             {o.label}
                         </option>
                     ))}
                 </select>
-                <select className={`${inputBase} ${size} w-24`} {...register('status')}>
+                <select className={`${selectBase} w-28 px-2 py-1.5`} {...register('status')}>
                     {statusOptions.map((o) => (
                         <option key={o.value} value={o.value}>
                             {o.label}
                         </option>
                     ))}
                 </select>
-                <Button type="submit" size="sm" className="h-7 text-xs" disabled={isSubmitting}>
+                <Button type="submit" size="sm" disabled={isSubmitting}>
                     {submitLabel}
                 </Button>
                 {trailingRow2}
             </div>
             {(errors.name ?? errors.amount ?? errors.currency ?? errors.cancelByAt) && (
-                <p className="mt-1.5 text-xs text-destructive">
-                    {errors.name?.message ?? errors.amount?.message ?? errors.currency?.message ?? errors.cancelByAt?.message}
+                <p className="mt-1.5 text-xs text-red-400">
+                    {errors.name?.message ??
+                        errors.amount?.message ??
+                        errors.currency?.message ??
+                        errors.cancelByAt?.message}
                 </p>
             )}
-            {error && <p className="mt-1.5 text-xs text-destructive">{error}</p>}
+            {error && <p className="mt-1.5 text-xs text-red-400">{error}</p>}
         </form>
     )
 }

@@ -8,7 +8,15 @@ import { signIn } from 'next-auth/react'
 import { type Resolver, useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
-import { loginCredentialsSchema, type LoginCredentials, type LoginCredentialsInput } from '@/lib/schemas'
+import {
+    loginCredentialsSchema,
+    type LoginCredentials,
+    type LoginCredentialsInput,
+} from '@/lib/schemas'
+
+const inputClass =
+    'w-full rounded border border-border bg-transparent px-3 py-1.5 text-sm text-light placeholder:text-grays focus:border-primary focus:outline-none'
+const labelClass = 'mb-1 block text-sm font-medium text-grays'
 
 export function LoginForm() {
     const router = useRouter()
@@ -21,7 +29,11 @@ export function LoginForm() {
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm<LoginCredentialsInput, undefined, LoginCredentials>({
-        resolver: zodResolver(loginCredentialsSchema as never) as Resolver<LoginCredentialsInput, undefined, LoginCredentials>,
+        resolver: zodResolver(loginCredentialsSchema as never) as Resolver<
+            LoginCredentialsInput,
+            undefined,
+            LoginCredentials
+        >,
         defaultValues: {
             email: '',
             password: '',
@@ -48,44 +60,51 @@ export function LoginForm() {
     })
 
     return (
-        <form onSubmit={onSubmit} className="space-y-4 rounded-lg border p-6">
-            <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium">
+        <form onSubmit={onSubmit} className="border-border space-y-4 border p-6">
+            <div>
+                <label htmlFor="email" className={labelClass}>
                     Email
                 </label>
                 <input
                     id="email"
                     type="email"
-                    className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+                    className={inputClass}
                     placeholder="name@example.com"
                     {...register('email')}
                 />
-                {errors.email ? <p className="text-sm text-destructive">{errors.email.message}</p> : null}
+                {errors.email ? (
+                    <p className="mt-1 text-xs text-red-400">{errors.email.message}</p>
+                ) : null}
             </div>
 
-            <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium">
+            <div>
+                <label htmlFor="password" className={labelClass}>
                     Пароль
                 </label>
                 <input
                     id="password"
                     type="password"
-                    className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+                    className={inputClass}
                     placeholder="••••••••"
                     {...register('password')}
                 />
-                {errors.password ? <p className="text-sm text-destructive">{errors.password.message}</p> : null}
+                {errors.password ? (
+                    <p className="mt-1 text-xs text-red-400">{errors.password.message}</p>
+                ) : null}
             </div>
 
-            {error ? <p className="text-sm text-destructive">{error}</p> : null}
+            {error ? <p className="text-xs text-red-400">{error}</p> : null}
 
             <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? 'Входим...' : 'Войти'}
             </Button>
 
-            <p className="text-center text-sm text-muted-foreground">
+            <p className="text-grays text-center text-xs">
                 Нет аккаунта?{' '}
-                <Link href="/register" className="underline underline-offset-4 hover:text-foreground">
+                <Link
+                    href="/register"
+                    className="text-light hover:text-primary transition-colors duration-100"
+                >
                     Зарегистрироваться
                 </Link>
             </p>

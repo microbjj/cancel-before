@@ -14,13 +14,17 @@ export type ReminderRuleItem = {
 type ReminderRulesInlineProps = {
     subscriptionId: string
     initialRules: ReminderRuleItem[]
-    /** Без своей карточки, в одну линию с формой */
     embedded?: boolean
 }
 
-const inputBase = 'rounded-md border border-input bg-background text-xs py-1 px-2 w-10 text-center focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring/50'
+const inputBase =
+    'rounded border border-border bg-transparent text-xs py-1 px-2 w-10 text-center text-light focus:border-primary focus:outline-none'
 
-export function ReminderRulesInline({ subscriptionId, initialRules, embedded }: ReminderRulesInlineProps) {
+export function ReminderRulesInline({
+    subscriptionId,
+    initialRules,
+    embedded,
+}: ReminderRulesInlineProps) {
     const [rules, setRules] = useState(initialRules)
     const [error, setError] = useState<string | null>(null)
     const [daysInput, setDaysInput] = useState(2)
@@ -39,7 +43,10 @@ export function ReminderRulesInline({ subscriptionId, initialRules, embedded }: 
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify({ daysBefore: validation.data.daysBefore, isActive: true }),
         })
-        const body = (await res.json().catch(() => null)) as { error?: string; data?: ReminderRuleItem } | null
+        const body = (await res.json().catch(() => null)) as {
+            error?: string
+            data?: ReminderRuleItem
+        } | null
         setIsSubmitting(false)
         if (!res.ok || !body?.data) {
             setError(body?.error ?? 'Ошибка')
@@ -72,7 +79,6 @@ export function ReminderRulesInline({ subscriptionId, initialRules, embedded }: 
 
     const content = (
         <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-muted-foreground text-xs whitespace-nowrap">Напом.</span>
             <input
                 type="number"
                 min={0}
@@ -81,22 +87,32 @@ export function ReminderRulesInline({ subscriptionId, initialRules, embedded }: 
                 value={daysInput}
                 onChange={(e) => setDaysInput(Number(e.target.value) || 0)}
             />
-            <span className="text-muted-foreground text-xs">дн.</span>
-            <Button type="button" size="sm" className="h-6 px-2 text-xs" disabled={isSubmitting} onClick={addRule}>
+            <span className="text-grays text-xs">дн.</span>
+            <Button type="button" size="sm" disabled={isSubmitting} onClick={addRule}>
                 +
             </Button>
             {rules.map((rule) => (
                 <span
                     key={rule.id}
-                    className={`inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-xs ${
-                        rule.isActive ? 'bg-primary/10' : 'bg-muted/50 text-muted-foreground'
+                    className={`inline-flex items-center gap-0.5 border px-1.5 py-0.5 text-xs ${
+                        rule.isActive ? 'border-primary text-primary' : 'border-border text-grays'
                     }`}
                 >
                     {rule.daysBefore}д
-                    <button type="button" className="hover:opacity-80 rounded p-0.5" onClick={() => toggleRule(rule)} title={rule.isActive ? 'Выкл' : 'Вкл'}>
+                    <button
+                        type="button"
+                        className="hover:text-light transition-colors"
+                        onClick={() => toggleRule(rule)}
+                        title={rule.isActive ? 'Выкл' : 'Вкл'}
+                    >
                         {rule.isActive ? '✓' : '○'}
                     </button>
-                    <button type="button" className="hover:bg-destructive/20 rounded p-0.5" onClick={() => removeRule(rule.id)} title="Удалить">
+                    <button
+                        type="button"
+                        className="transition-colors hover:text-red-400"
+                        onClick={() => removeRule(rule.id)}
+                        title="Удалить"
+                    >
                         ×
                     </button>
                 </span>
@@ -104,19 +120,10 @@ export function ReminderRulesInline({ subscriptionId, initialRules, embedded }: 
         </div>
     )
 
-    if (embedded) {
-        return (
-            <div className="space-y-1">
-                {content}
-                {error && <p className="text-xs text-destructive">{error}</p>}
-            </div>
-        )
-    }
-
     return (
-        <div className="rounded-lg border bg-card p-2">
+        <div className={embedded ? 'space-y-1' : 'border-border space-y-1 border p-2'}>
             {content}
-            {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
+            {error && <p className="text-xs text-red-400">{error}</p>}
         </div>
     )
 }
